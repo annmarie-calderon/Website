@@ -1,0 +1,155 @@
+---
+title: "Project 1 by Annmarie Calderon"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+#Introduction
+*As a forensic science minor, I am interested in learning about patterns in crim that can be studied for application of future prevention. With that being said, for this project, I was interested in studying murder rates from the 1970s in each state of the US. I found the data browsing the r datasets and found the dataset "state.x77", which contains general information from each state (such as illiteracy rates, population, size, high school graduation rates, etc.) from 1976. The second dataset, named "USArrests" provided information on arrests from murder, assault, and rape based on each state made in 1973. With this imformation, I looked for which states were found to have high levels of murder compared to others as well as if there is any relationship between education (measured through illiteracy and HS grad from stat.x77).*
+```{r}
+library(dplyr)
+library(tidyverse)
+library(cluster)
+library(GGally)
+#part 1: find the data
+state_info <- as.data.frame(state.x77)
+crime <- USArrests
+
+
+```
+
+#Joining
+*I started off by distinguishing the year each murder rates were recorded and then changing the first column into row names (State names). After I did this, I joined the two data frames using full join so as to keep all variables in one dataset. Because both data sets had the same amount of observations, no cases were dropped.*
+```{r}
+#joining the data
+state_info <- rename(state_info, Murder.1976 = Murder)
+glimpse(state_info)
+crime <- rename(crime, Murder.1973 = Murder)
+glimpse(crime)
+
+crime <- crime %>% rownames_to_column(var = "State")
+state_info <- state_info %>% rownames_to_column(var = "State") 
+joined <- full_join(crime, state_info)
+glimpse(joined)
+
+```
+
+
+#Summary Statistics:
+*I started off the summary statistics by finding the mean and standars deviation of all of my numerical values using summarize_all(). I then created three new columns using mutate(): first to compute the total amount of arrests made in each state, second to find the percentage of the population that got arrested from each state, and lastly, the total amount of murder measured in years 1973 and 1976. I then found the mean for total murders that occurred across all states. Then using filter(), I pulled out all the states in which the total murder was above the average (down to 22 states), and then arranged the new list from largest amount to murder to least above the average and found that Georgia had the most amount of murders in the country between these two measured years. I then created a smaller data set that only incuded the murder rates from each state for each year and made the data "tidy" using pivot.longer() to create a new column that states the year recorded and the murder rate. I calculated the percent increase in murder rates in each state from 1973 to 1976 and arranged that list to find the state that had the largest percent change (Vermont). Next, grouped my tidy data by state and found the mean murder between the two years. Lastly, I calculated the correlation between all my variables using cor().*
+
+```{r}
+#Summary Statistics
+joined %>% summarize_all(mean)
+joined %>% summarize_all(sd)
+joined <- joined %>% mutate(Tot.Arrests.1973 = Murder.1973+Assault+Rape) %>% mutate(Arrests.percent = (Murder.1973+Assault+Rape)/Population*100) %>% mutate(tot.murder = Murder.1973+Murder.1976)
+
+joined %>% summarize(mean(tot.murder))
+top_murd <-joined %>% filter(tot.murder>mean(joined$tot.murder)) %>% arrange(desc(tot.murder))
+glimpse(top_murd)
+
+murd_rates<-joined %>% select(State, Murder.1973, Murder.1976) 
+murd_rates1 <- murd_rates  %>% pivot_longer(cols=c("Murder.1973","Murder.1976"), names_to="Year", values_to="Murder")
+
+increased <- murd_rates %>% filter((Murder.1976 - Murder.1973) > 0) %>% mutate(Perc.Increase = ((Murder.1976-Murder.1973)/Murder.1973)*100)
+
+increased %>% arrange(desc(Perc.Increase))
+murd_rates1 %>% group_by(State) %>% summarize(mean(Murder))
+
+
+joined1 <- column_to_rownames(joined, var = "State") 
+correl <- joined1 %>% select(-Tot.Arrests.1973, -Arrests.percent, -tot.murder) %>% cor()
+head(correl)
+```
+
+#Data Visualization
+*The first graph listed is a heat map depicting the correlation between all variables measured in the data. As one may assume, there is a strong correlation in between the rates of murder between each year, thus you could say that high or low murder can be a strong predictor for future murder rates in the same states. There are also a few strong correlations between other reasons for arrest (such as rape and assult), and murder rates. Lastly there is some correlation between murder rates and illiteracy but no strong correlation between high school graduation rates and murder.*
+
+```{r}
+library(reshape2)
+#heatmap
+melt.matrix <- melt(correl)
+head(melt.matrix)
+
+ggplot(data = melt.matrix, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position="right") +
+  labs( y = "Variable 1", x = "Variable 2", title ="Correlation heat map") +
+  scale_fill_gradient(low="red", high="blue")
+```
+
+*The next graph is a map depicting murder rates between 1973 and 1976. This graph allows us to see the increase or decrease in murder rates within the two. I ordered the states by highest to lowest reported murder rates. This allows us to see that Georgia, Louisiana, and Mississippi (all southern states) are the 3 states that had the most reported murder rates.*
+
+```{r}
+#Graph1
+ggplot(murd_rates1, aes(x= reorder(State, -Murder), y= Murder, fill=Year)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  labs( y = "Murder rates per year", x = "States", title ="Murder rates difference from 1973 to 1976") +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position="top")
+```
+
+*Next, this graph (2) depicts  total murders in each states with the third variable, Illiteracy, being presented through color. Again, it was reordered from highest to lowest murder levels. In this graph, one caould interpret that there is a slight relationship between illliteracy and murder rates but not the one I anticipated. Surprisingly enough, it seems that the medium to high levels of illiteracy rates are related to higher levels of murder and vise versa: low illiteracy rates are associated with low levels of murder.*
+
+```{r}
+#Graph2
+ggplot(joined, aes(x = reorder(State, -tot.murder), fill = Illiteracy)) +  
+  geom_bar(aes(y=tot.murder), stat="summary", fun.y="mean") +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position="right") +
+  labs( y = "Total Arrests for Murder", x = "States", title ="Murder rates in relation with Illiteracy") +
+  scale_fill_gradient(low="red", high="blue")
+```
+
+*Lastly, this graph is a scatter plot that depicts the relationship between illiteracy and total murder (similar to the above plots, but presented in a different manner.) A third variable, Urban Population by state, was added in order to determine if this is at all in relation to the other two variables. However, there is not a strong relationship that can be determined from this.*
+```{r}
+#Graph3
+ggplot(joined, x = tot.murder, y = Illiteracy) +
+  geom_point( aes(x = tot.murder, y = Illiteracy, color=UrbanPop)) +
+  labs( y = "Illiteracy Rate", x = "Total Murder", title ="Murder rates in relation with Illiteracy and Urban Population") +
+  xlim(0,40)+ylim(0, 5)
+```
+
+#PAM
+*In this section, I used PAM/k-means to determine clusters that can group my data by correlative relationships. By doing a for loop, we can grab data from the joined dataset to cluster. By creating the su=illhouette vector and then graph it as a line plot on ggplot, I determined that the best amount of clusters for my data is 2. I then created the variable for list pam which I used to create the correlation diagram using ggpairs. I only used the first few variables in my dataset so that the diagram is clear and legible. Through this diagram, I was able to determine through clusters that the highest correlation exists between arrests for assults and arrests for murder and the smallest correlation between assault and urban population. According to my last line of code, my pam clusters are very strong (above the cut off of 0.8).*
+
+```{r}
+
+silhouette<-vector()
+for(i in 2:15){pamdat <- joined%>%select(-State)%>%pam(i)
+silhouette[i] <- pamdat$silinfo$avg.width
+}
+
+
+ggplot()+geom_line(aes(x=1:15,y=silhouette))+scale_x_continuous(name="k",breaks=1:15)
+
+
+
+pam1 <- joined%>%select(-State)%>%pam(2)
+pam1
+joined %>% mutate(cluster=as.factor(pam1$clustering)) %>% ggpairs(columns = 2:6, aes(color=cluster))
+
+
+plot(pam1, which=2)
+```
+
+
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
