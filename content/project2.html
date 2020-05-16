@@ -5,6 +5,7 @@ date: "4/27/2020"
 output:
   pdf_document: default
   html_document: default
+  showpagemeta: false
 ---
 
 
@@ -152,7 +153,7 @@ summarize(SSB=sum((mean-groupmean)^2))%&gt;%summarize(sum(SSB))%&gt;%pull
 hist(Fs, prob=T); abline(v = obs_F, col=&quot;red&quot;)</code></pre>
 <p><img src="/project2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <pre class="r"><code>mean(Fs&gt;obs_F)</code></pre>
-<pre><code>## [1] 0.0134</code></pre>
+<pre><code>## [1] 0.0168</code></pre>
 <p><em>Only 1.34% of our F stats were below our observed F stat, thus we reject the null hypothesis. There is a significant difference between the groups based on tumor thickness.</em></p>
 <p>#3. (35 pts) Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction. – Interpret the coefficient estimates (do not discuss significance) (10) – Plot the regression using ggplot(). If your interaction is numeric by numeric, refer to code near the end of WS15 to make the plot. If you have 3 or more predictors, just chose two to plot for convenience. (8) – Check assumptions of linearity, normality, and homoskedasticity either graphically or using a hypothesis test (4) – Regardless, recompute regression results with robust standard errors via coeftest(…, vcov=vcovHC(…)). Discuss significance of results, including any changes from before/after robust SEs if applicable. (8) – What proportion of the variation in the outcome does your model explain? (4)</p>
 <pre class="r"><code>#Linear regression with mean centering of age variable
@@ -231,8 +232,8 @@ coef(fit) #save coefs
 })
 ## Estimated SEs
 samp_distn %&gt;% t %&gt;% as.data.frame %&gt;% summarize_all(sd)</code></pre>
-<pre><code>##   (Intercept)     sex    age_c sex:age_c
-## 1    88.60633 157.892 6.133943   9.45743</code></pre>
+<pre><code>##   (Intercept)      sex    age_c sex:age_c
+## 1    89.19674 158.7251 6.179932  9.601799</code></pre>
 <p>#5. (40 pts) Perform a logistic regression predicting a binary categorical variable (if you don’t have one, make/get one) from at least two explanatory variables (interaction not necessary). – Interpret coefficient estimates in context (10) – Report a confusion matrix for your logistic regression (2) – Compute and discuss the Accuracy, Sensitivity (TPR), Specificity (TNR), and Recall (PPV) of your model (5) – Using ggplot, plot density of log-odds (logit) by your binary outcome variable (3) – Generate an ROC curve (plot) and calculate AUC (either manually or with a package); interpret (10) – Perform 10-fold (or repeated random sub-sampling) CV and report average out-of-sample Accuracy, Sensitivity, and Recall (10)</p>
 <pre class="r"><code>fit2 &lt;- glm(ulcer ~ thickness + age, data = melanoma, family=binomial(link=&quot;logit&quot;))
 coeftest(fit2)</code></pre>

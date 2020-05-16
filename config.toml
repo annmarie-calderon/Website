@@ -6,7 +6,6 @@ disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
 theme = "hugo-sustain"
-bloo
 [permalinks]
   post = "/:year/:month/:day/:slug"
 

@@ -7,7 +7,7 @@
     <meta name="author" content="Annmarie Calderon" />
     <meta name="description" content="Describe your website">
     <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
-    <title>Blogs</title>
+    <title>Intro to Python</title>
     <meta name="generator" content="Hugo 0.70.0" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/main.css" />
@@ -24,6 +24,7 @@
 
   <body>
     <div id="wrap">
+
       
       <nav class="navbar navbar-default">
   <div class="container">
@@ -51,28 +52,67 @@
   </div>
 </nav>
 
+      
       <div class="container">
-        <h3>Archive</h3>
-          <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/blog/intro-to-r-and-python/">Intro to Python</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          May 15, 2020
+            &nbsp;&nbsp;
             
-              <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                  <h5 style="text-align: right">
-                    May 15, 2020
-                  </h5>
-                 </div>
-                 <div class="col-sm-8 col-md-8 col-lg-8">
-                   <h5 style="text-align: left">
-                    <strong><a href="/blog/python/">Python</a></strong>
-                  </h5>
-                </div>
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<pre class="python"><code>#Python can be used to filter out important information using regular expressions. 
+
+import re
+string_bdays=&quot;Here&#39;s a list of birthdays that are important for me to remember David: 09.06.62, Aida: 09.22.65, Brian: 03.22.87, Wendy: 06.03.89, Dorian: 10.18.2006, Sabastian: 07.19.09, Sergio: 12.02.97, Alisha: 06.11.98&quot;
+print(string_bdays)</code></pre>
+<pre><code>## Here&#39;s a list of birthdays that are important for me to remember David: 09.06.62, Aida: 09.22.65, Brian: 03.22.87, Wendy: 06.03.89, Dorian: 10.18.2006, Sabastian: 07.19.09, Sergio: 12.02.97, Alisha: 06.11.98</code></pre>
+<pre class="python"><code>re.findall(r&quot;\d{1,3}\.\d{1,3}\.\d{1,3}&quot;, string_bdays)</code></pre>
+<pre><code>## [&#39;09.06.62&#39;, &#39;09.22.65&#39;, &#39;03.22.87&#39;, &#39;06.03.89&#39;, &#39;10.18.200&#39;, &#39;07.19.09&#39;, &#39;12.02.97&#39;, &#39;06.11.98&#39;]</code></pre>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
               </div>
-            
             </div>
           </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
       </div>
+      
     </div>
+
     
     <footer>
   <div id="footer">
@@ -94,5 +134,6 @@
 <script src="/js/ie10-viewport-bug-workaround.js"></script>
 
 
+    
   </body>
 </html>

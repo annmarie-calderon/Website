@@ -22,6 +22,8 @@ library(dplyr)
 library(tidyverse)
 library(cluster)
 library(GGally)
+
+
 #part 1: find the data
 state_info <- as.data.frame(state.x77)
 crime <- USArrests
