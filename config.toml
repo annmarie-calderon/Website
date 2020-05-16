@@ -6,13 +6,13 @@ disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
 theme = "hugo-sustain"
-
+bloo
 [permalinks]
   post = "/:year/:month/:day/:slug"
 
 [params]
   avatar = "me.png"
-  author = "Annmarie Guadalupe Calderon"
+  author = "Annmarie Calderon"
   description = "Describe your website"
 
   # Custom assets can be linked with their paths relative to static/

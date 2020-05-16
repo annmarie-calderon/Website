@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Annmarie Calderon" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Project 1 by Annmarie Calderon</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/project1/">Project 1 by Annmarie Calderon</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          January 1, 0001
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="r-markdown" class="section level2">
+<h2>R Markdown</h2>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<p>#Introduction
+<em>As a forensic science minor, I am interested in learning about patterns in crim that can be studied for application of future prevention. With that being said, for this project, I was interested in studying murder rates from the 1970s in each state of the US. I found the data browsing the r datasets and found the dataset “state.x77”, which contains general information from each state (such as illiteracy rates, population, size, high school graduation rates, etc.) from 1976. The second dataset, named “USArrests” provided information on arrests from murder, assault, and rape based on each state made in 1973. With this imformation, I looked for which states were found to have high levels of murder compared to others as well as if there is any relationship between education (measured through illiteracy and HS grad from stat.x77).</em></p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.0     ✓ purrr   0.3.3
+## ✓ tibble  2.1.3     ✓ stringr 1.4.0
+## ✓ tidyr   1.0.2     ✓ forcats 0.4.0
+## ✓ readr   1.3.1</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(cluster)
+library(GGally)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
+##   method from   
+##   +.gg   ggplot2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;GGally&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     nasa</code></pre>
+<pre class="r"><code>#part 1: find the data
+state_info &lt;- as.data.frame(state.x77)
+crime &lt;- USArrests</code></pre>
+<p>#Joining
+<em>I started off by distinguishing the year each murder rates were recorded and then changing the first column into row names (State names). After I did this, I joined the two data frames using full join so as to keep all variables in one dataset. Because both data sets had the same amount of observations, no cases were dropped.</em></p>
+<pre class="r"><code>#joining the data
+state_info &lt;- rename(state_info, Murder.1976 = Murder)
+glimpse(state_info)</code></pre>
+<pre><code>## Observations: 50
+## Variables: 8
+## $ Population  &lt;dbl&gt; 3615, 365, 2212, 2110, 21198, 2541, 3100, 579, 8277, 4931…
+## $ Income      &lt;dbl&gt; 3624, 6315, 4530, 3378, 5114, 4884, 5348, 4809, 4815, 409…
+## $ Illiteracy  &lt;dbl&gt; 2.1, 1.5, 1.8, 1.9, 1.1, 0.7, 1.1, 0.9, 1.3, 2.0, 1.9, 0.…
+## $ `Life Exp`  &lt;dbl&gt; 69.05, 69.31, 70.55, 70.66, 71.71, 72.06, 72.48, 70.06, 7…
+## $ Murder.1976 &lt;dbl&gt; 15.1, 11.3, 7.8, 10.1, 10.3, 6.8, 3.1, 6.2, 10.7, 13.9, 6…
+## $ `HS Grad`   &lt;dbl&gt; 41.3, 66.7, 58.1, 39.9, 62.6, 63.9, 56.0, 54.6, 52.6, 40.…
+## $ Frost       &lt;dbl&gt; 20, 152, 15, 65, 20, 166, 139, 103, 11, 60, 0, 126, 127, …
+## $ Area        &lt;dbl&gt; 50708, 566432, 113417, 51945, 156361, 103766, 4862, 1982,…</code></pre>
+<pre class="r"><code>crime &lt;- rename(crime, Murder.1973 = Murder)
+glimpse(crime)</code></pre>
+<pre><code>## Observations: 50
+## Variables: 4
+## $ Murder.1973 &lt;dbl&gt; 13.2, 10.0, 8.1, 8.8, 9.0, 7.9, 3.3, 5.9, 15.4, 17.4, 5.3…
+## $ Assault     &lt;int&gt; 236, 263, 294, 190, 276, 204, 110, 238, 335, 211, 46, 120…
+## $ UrbanPop    &lt;int&gt; 58, 48, 80, 50, 91, 78, 77, 72, 80, 60, 83, 54, 83, 65, 5…
+## $ Rape        &lt;dbl&gt; 21.2, 44.5, 31.0, 19.5, 40.6, 38.7, 11.1, 15.8, 31.9, 25.…</code></pre>
+<pre class="r"><code>crime &lt;- crime %&gt;% rownames_to_column(var = &quot;State&quot;)
+state_info &lt;- state_info %&gt;% rownames_to_column(var = &quot;State&quot;) 
+joined &lt;- full_join(crime, state_info)</code></pre>
+<pre><code>## Joining, by = &quot;State&quot;</code></pre>
+<pre class="r"><code>glimpse(joined)</code></pre>
+<pre><code>## Observations: 50
+## Variables: 13
+## $ State       &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;California&quot;,…
+## $ Murder.1973 &lt;dbl&gt; 13.2, 10.0, 8.1, 8.8, 9.0, 7.9, 3.3, 5.9, 15.4, 17.4, 5.3…
+## $ Assault     &lt;int&gt; 236, 263, 294, 190, 276, 204, 110, 238, 335, 211, 46, 120…
+## $ UrbanPop    &lt;int&gt; 58, 48, 80, 50, 91, 78, 77, 72, 80, 60, 83, 54, 83, 65, 5…
+## $ Rape        &lt;dbl&gt; 21.2, 44.5, 31.0, 19.5, 40.6, 38.7, 11.1, 15.8, 31.9, 25.…
+## $ Population  &lt;dbl&gt; 3615, 365, 2212, 2110, 21198, 2541, 3100, 579, 8277, 4931…
+## $ Income      &lt;dbl&gt; 3624, 6315, 4530, 3378, 5114, 4884, 5348, 4809, 4815, 409…
+## $ Illiteracy  &lt;dbl&gt; 2.1, 1.5, 1.8, 1.9, 1.1, 0.7, 1.1, 0.9, 1.3, 2.0, 1.9, 0.…
+## $ `Life Exp`  &lt;dbl&gt; 69.05, 69.31, 70.55, 70.66, 71.71, 72.06, 72.48, 70.06, 7…
+## $ Murder.1976 &lt;dbl&gt; 15.1, 11.3, 7.8, 10.1, 10.3, 6.8, 3.1, 6.2, 10.7, 13.9, 6…
+## $ `HS Grad`   &lt;dbl&gt; 41.3, 66.7, 58.1, 39.9, 62.6, 63.9, 56.0, 54.6, 52.6, 40.…
+## $ Frost       &lt;dbl&gt; 20, 152, 15, 65, 20, 166, 139, 103, 11, 60, 0, 126, 127, …
+## $ Area        &lt;dbl&gt; 50708, 566432, 113417, 51945, 156361, 103766, 4862, 1982,…</code></pre>
+<p>#Summary Statistics:
+<em>I started off the summary statistics by finding the mean and standars deviation of all of my numerical values using summarize_all(). I then created three new columns using mutate(): first to compute the total amount of arrests made in each state, second to find the percentage of the population that got arrested from each state, and lastly, the total amount of murder measured in years 1973 and 1976. I then found the mean for total murders that occurred across all states. Then using filter(), I pulled out all the states in which the total murder was above the average (down to 22 states), and then arranged the new list from largest amount to murder to least above the average and found that Georgia had the most amount of murders in the country between these two measured years. I then created a smaller data set that only incuded the murder rates from each state for each year and made the data “tidy” using pivot.longer() to create a new column that states the year recorded and the murder rate. I calculated the percent increase in murder rates in each state from 1973 to 1976 and arranged that list to find the state that had the largest percent change (Vermont). Next, grouped my tidy data by state and found the mean murder between the two years. Lastly, I calculated the correlation between all my variables using cor().</em></p>
+<pre class="r"><code>#Summary Statistics
+joined %&gt;% summarize_all(mean)</code></pre>
+<pre><code>## Warning in mean.default(State): argument is not numeric or logical: returning NA</code></pre>
+<pre><code>##   State Murder.1973 Assault UrbanPop   Rape Population Income Illiteracy
+## 1    NA       7.788  170.76    65.54 21.232    4246.42 4435.8       1.17
+##   Life Exp Murder.1976 HS Grad  Frost     Area
+## 1  70.8786       7.378  53.108 104.46 70735.88</code></pre>
+<pre class="r"><code>joined %&gt;% summarize_all(sd)</code></pre>
+<pre><code>## Warning in var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm =
+## na.rm): NAs introduced by coercion</code></pre>
+<pre><code>##   State Murder.1973  Assault UrbanPop     Rape Population   Income Illiteracy
+## 1    NA     4.35551 83.33766 14.47476 9.366385   4464.491 614.4699  0.6095331
+##   Life Exp Murder.1976  HS Grad    Frost    Area
+## 1 1.342394     3.69154 8.076998 51.98085 85327.3</code></pre>
+<pre class="r"><code>joined &lt;- joined %&gt;% mutate(Tot.Arrests.1973 = Murder.1973+Assault+Rape) %&gt;% mutate(Arrests.percent = (Murder.1973+Assault+Rape)/Population*100) %&gt;% mutate(tot.murder = Murder.1973+Murder.1976)
+
+joined %&gt;% summarize(mean(tot.murder))</code></pre>
+<pre><code>##   mean(tot.murder)
+## 1           15.166</code></pre>
+<pre class="r"><code>top_murd &lt;-joined %&gt;% filter(tot.murder&gt;mean(joined$tot.murder)) %&gt;% arrange(desc(tot.murder))
+glimpse(top_murd)</code></pre>
+<pre><code>## Observations: 22
+## Variables: 16
+## $ State            &lt;chr&gt; &quot;Georgia&quot;, &quot;Louisiana&quot;, &quot;Mississippi&quot;, &quot;Alabama&quot;, &quot;F…
+## $ Murder.1973      &lt;dbl&gt; 17.4, 15.4, 16.1, 13.2, 15.4, 14.4, 12.7, 13.2, 13.0…
+## $ Assault          &lt;int&gt; 211, 249, 259, 236, 335, 279, 201, 188, 337, 252, 25…
+## $ UrbanPop         &lt;int&gt; 60, 66, 44, 58, 80, 48, 80, 59, 45, 81, 74, 86, 48, …
+## $ Rape             &lt;dbl&gt; 25.8, 22.2, 17.1, 21.2, 31.9, 22.5, 25.5, 26.9, 16.1…
+## $ Population       &lt;dbl&gt; 4931, 3806, 2341, 3615, 8277, 2816, 12237, 4173, 544…
+## $ Income           &lt;dbl&gt; 4091, 3545, 3098, 3624, 4815, 3635, 4188, 3821, 3875…
+## $ Illiteracy       &lt;dbl&gt; 2.0, 2.8, 2.4, 2.1, 1.3, 2.3, 2.2, 1.7, 1.8, 0.5, 0.…
+## $ `Life Exp`       &lt;dbl&gt; 68.54, 68.76, 68.09, 69.05, 70.66, 67.96, 70.90, 70.…
+## $ Murder.1976      &lt;dbl&gt; 13.9, 13.2, 12.5, 15.1, 10.7, 11.6, 12.2, 11.0, 11.1…
+## $ `HS Grad`        &lt;dbl&gt; 40.6, 42.2, 41.0, 41.3, 52.6, 37.8, 47.4, 41.8, 38.5…
+## $ Frost            &lt;dbl&gt; 60, 12, 50, 20, 11, 65, 35, 70, 80, 188, 125, 82, 15…
+## $ Area             &lt;dbl&gt; 58073, 44930, 47296, 50708, 54090, 30225, 262134, 41…
+## $ Tot.Arrests.1973 &lt;dbl&gt; 254.2, 286.6, 292.2, 270.4, 382.3, 315.9, 239.2, 228…
+## $ Arrests.percent  &lt;dbl&gt; 5.155141, 7.530215, 12.481845, 7.479945, 4.618823, 1…
+## $ tot.murder       &lt;dbl&gt; 31.3, 28.6, 28.6, 28.3, 26.1, 26.0, 24.9, 24.2, 24.1…</code></pre>
+<pre class="r"><code>murd_rates&lt;-joined %&gt;% select(State, Murder.1973, Murder.1976) 
+murd_rates1 &lt;- murd_rates  %&gt;% pivot_longer(cols=c(&quot;Murder.1973&quot;,&quot;Murder.1976&quot;), names_to=&quot;Year&quot;, values_to=&quot;Murder&quot;)
+
+increased &lt;- murd_rates %&gt;% filter((Murder.1976 - Murder.1973) &gt; 0) %&gt;% mutate(Perc.Increase = ((Murder.1976-Murder.1973)/Murder.1973)*100)
+
+increased %&gt;% arrange(desc(Perc.Increase))</code></pre>
+<pre><code>##            State Murder.1973 Murder.1976 Perc.Increase
+## 1        Vermont         2.2         5.5    150.000000
+## 2          Idaho         2.6         5.3    103.846154
+## 3   North Dakota         0.8         1.4     75.000000
+## 4  New Hampshire         2.1         3.3     57.142857
+## 5           Utah         3.2         4.5     40.625000
+## 6          Maine         2.1         2.7     28.571429
+## 7  West Virginia         5.7         6.7     17.543860
+## 8         Hawaii         5.3         6.2     16.981132
+## 9      Wisconsin         2.6         3.0     15.384615
+## 10      Arkansas         8.8        10.1     14.772727
+## 11    California         9.0        10.3     14.444444
+## 12       Alabama        13.2        15.1     14.393939
+## 13        Alaska        10.0        11.3     13.000000
+## 14      Virginia         8.5         9.5     11.764706
+## 15      Kentucky         9.7        10.6      9.278351
+## 16    Washington         4.0         4.3      7.500000
+## 17      Delaware         5.9         6.2      5.084746
+## 18          Iowa         2.2         2.3      4.545455
+## 19      Missouri         9.0         9.3      3.333333
+## 20       Wyoming         6.8         6.9      1.470588
+## 21          Ohio         7.3         7.4      1.369863</code></pre>
+<pre class="r"><code>murd_rates1 %&gt;% group_by(State) %&gt;% summarize(mean(Murder))</code></pre>
+<pre><code>## # A tibble: 50 x 2
+##    State       `mean(Murder)`
+##    &lt;chr&gt;                &lt;dbl&gt;
+##  1 Alabama              14.2 
+##  2 Alaska               10.6 
+##  3 Arizona               7.95
+##  4 Arkansas              9.45
+##  5 California            9.65
+##  6 Colorado              7.35
+##  7 Connecticut           3.2 
+##  8 Delaware              6.05
+##  9 Florida              13.0 
+## 10 Georgia              15.6 
+## # … with 40 more rows</code></pre>
+<pre class="r"><code>joined1 &lt;- column_to_rownames(joined, var = &quot;State&quot;) 
+correl &lt;- joined1 %&gt;% select(-Tot.Arrests.1973, -Arrests.percent, -tot.murder) %&gt;% cor()
+head(correl)</code></pre>
+<pre><code>##             Murder.1973    Assault   UrbanPop      Rape Population      Income
+## Murder.1973  1.00000000 0.80187331 0.06957262 0.5635788  0.3202449 -0.21520501
+## Assault      0.80187331 1.00000000 0.25887170 0.6652412  0.3170228  0.04093255
+## UrbanPop     0.06957262 0.25887170 1.00000000 0.4113412  0.5126049  0.48053302
+## Rape         0.56357883 0.66524123 0.41134124 1.0000000  0.3052336  0.35738678
+## Population   0.32024487 0.31702281 0.51260491 0.3052336  1.0000000  0.20822756
+## Income      -0.21520501 0.04093255 0.48053302 0.3573868  0.2082276  1.00000000
+##              Illiteracy    Life Exp Murder.1976     HS Grad      Frost
+## Murder.1973  0.70677564 -0.77849850  0.93369089 -0.52159126 -0.5413970
+## Assault      0.51101299 -0.62665800  0.73976479 -0.23030510 -0.4682399
+## UrbanPop    -0.06219936  0.27146824  0.01638255  0.35868123 -0.2461862
+## Rape         0.15459686 -0.26956828  0.57996132  0.27072504 -0.2792054
+## Population   0.10762237 -0.06805195  0.34364275 -0.09848975 -0.3321525
+## Income      -0.43707519  0.34025534 -0.23007761  0.61993232  0.2262822
+##                    Area
+## Murder.1973  0.14808597
+## Assault      0.23120879
+## UrbanPop    -0.06154747
+## Rape         0.52495510
+## Population   0.02254384
+## Income       0.36331544</code></pre>
+<p>#Data Visualization
+<em>The first graph listed is a heat map depicting the correlation between all variables measured in the data. As one may assume, there is a strong correlation in between the rates of murder between each year, thus you could say that high or low murder can be a strong predictor for future murder rates in the same states. There are also a few strong correlations between other reasons for arrest (such as rape and assult), and murder rates. Lastly there is some correlation between murder rates and illiteracy but no strong correlation between high school graduation rates and murder.</em></p>
+<pre class="r"><code>library(reshape2)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;reshape2&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     smiths</code></pre>
+<pre class="r"><code>#heatmap
+melt.matrix &lt;- melt(correl)
+head(melt.matrix)</code></pre>
+<pre><code>##          Var1        Var2       value
+## 1 Murder.1973 Murder.1973  1.00000000
+## 2     Assault Murder.1973  0.80187331
+## 3    UrbanPop Murder.1973  0.06957262
+## 4        Rape Murder.1973  0.56357883
+## 5  Population Murder.1973  0.32024487
+## 6      Income Murder.1973 -0.21520501</code></pre>
+<pre class="r"><code>ggplot(data = melt.matrix, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position=&quot;right&quot;) +
+  labs( y = &quot;Variable 1&quot;, x = &quot;Variable 2&quot;, title =&quot;Correlation heat map&quot;) +
+  scale_fill_gradient(low=&quot;red&quot;, high=&quot;blue&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><em>The next graph is a map depicting murder rates between 1973 and 1976. This graph allows us to see the increase or decrease in murder rates within the two. I ordered the states by highest to lowest reported murder rates. This allows us to see that Georgia, Louisiana, and Mississippi (all southern states) are the 3 states that had the most reported murder rates.</em></p>
+<pre class="r"><code>#Graph1
+ggplot(murd_rates1, aes(x= reorder(State, -Murder), y= Murder, fill=Year)) +
+  geom_bar(stat=&quot;identity&quot;, position=position_dodge()) +
+  labs( y = &quot;Murder rates per year&quot;, x = &quot;States&quot;, title =&quot;Murder rates difference from 1973 to 1976&quot;) +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position=&quot;top&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><em>Next, this graph (2) depicts total murders in each states with the third variable, Illiteracy, being presented through color. Again, it was reordered from highest to lowest murder levels. In this graph, one caould interpret that there is a slight relationship between illliteracy and murder rates but not the one I anticipated. Surprisingly enough, it seems that the medium to high levels of illiteracy rates are related to higher levels of murder and vise versa: low illiteracy rates are associated with low levels of murder.</em></p>
+<pre class="r"><code>#Graph2
+ggplot(joined, aes(x = reorder(State, -tot.murder), fill = Illiteracy)) +  
+  geom_bar(aes(y=tot.murder), stat=&quot;summary&quot;, fun.y=&quot;mean&quot;) +
+  theme(axis.text.x = element_text(angle=90, hjust=1),legend.position=&quot;right&quot;) +
+  labs( y = &quot;Total Arrests for Murder&quot;, x = &quot;States&quot;, title =&quot;Murder rates in relation with Illiteracy&quot;) +
+  scale_fill_gradient(low=&quot;red&quot;, high=&quot;blue&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fun.y</code></pre>
+<pre><code>## No summary function supplied, defaulting to `mean_se()`</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><em>Lastly, this graph is a scatter plot that depicts the relationship between illiteracy and total murder (similar to the above plots, but presented in a different manner.) A third variable, Urban Population by state, was added in order to determine if this is at all in relation to the other two variables. However, there is not a strong relationship that can be determined from this.</em></p>
+<pre class="r"><code>#Graph3
+ggplot(joined, x = tot.murder, y = Illiteracy) +
+  geom_point( aes(x = tot.murder, y = Illiteracy, color=UrbanPop)) +
+  labs( y = &quot;Illiteracy Rate&quot;, x = &quot;Total Murder&quot;, title =&quot;Murder rates in relation with Illiteracy and Urban Population&quot;) +
+  xlim(0,40)+ylim(0, 5)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>#PAM
+<em>In this section, I used PAM/k-means to determine clusters that can group my data by correlative relationships. By doing a for loop, we can grab data from the joined dataset to cluster. By creating the su=illhouette vector and then graph it as a line plot on ggplot, I determined that the best amount of clusters for my data is 2. I then created the variable for list pam which I used to create the correlation diagram using ggpairs. I only used the first few variables in my dataset so that the diagram is clear and legible. Through this diagram, I was able to determine through clusters that the highest correlation exists between arrests for assults and arrests for murder and the smallest correlation between assault and urban population. According to my last line of code, my pam clusters are very strong (above the cut off of 0.8).</em></p>
+<pre class="r"><code>silhouette&lt;-vector()
+for(i in 2:15){pamdat &lt;- joined%&gt;%select(-State)%&gt;%pam(i)
+silhouette[i] &lt;- pamdat$silinfo$avg.width
+}
+
+
+ggplot()+geom_line(aes(x=1:15,y=silhouette))+scale_x_continuous(name=&quot;k&quot;,breaks=1:15)</code></pre>
+<pre><code>## Warning: Removed 1 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>pam1 &lt;- joined%&gt;%select(-State)%&gt;%pam(2)
+pam1</code></pre>
+<pre><code>## Medoids:
+##      ID Murder.1973 Assault UrbanPop Rape Population Income Illiteracy Life Exp
+## [1,] 49         2.6      53       66 10.8       4589   4468        0.7    72.48
+## [2,]  2        10.0     263       48 44.5        365   6315        1.5    69.31
+##      Murder.1976 HS Grad Frost   Area Tot.Arrests.1973 Arrests.percent
+## [1,]         3.0    54.5   149  54464             66.4        1.446938
+## [2,]        11.3    66.7   152 566432            317.5       86.986301
+##      tot.murder
+## [1,]        5.6
+## [2,]       21.3
+## Clustering vector:
+##  [1] 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [39] 1 1 1 1 1 1 1 1 1 1 1 1
+## Objective function:
+##    build     swap 
+## 31884.59 31884.59 
+## 
+## Available components:
+##  [1] &quot;medoids&quot;    &quot;id.med&quot;     &quot;clustering&quot; &quot;objective&quot;  &quot;isolation&quot; 
+##  [6] &quot;clusinfo&quot;   &quot;silinfo&quot;    &quot;diss&quot;       &quot;call&quot;       &quot;data&quot;</code></pre>
+<pre class="r"><code>joined %&gt;% mutate(cluster=as.factor(pam1$clustering)) %&gt;% ggpairs(columns = 2:6, aes(color=cluster))</code></pre>
+<pre><code>## Warning: Groups with fewer than two data points have been dropped.</code></pre>
+<pre><code>## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre class="r"><code>plot(pam1, which=2)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+</div>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
