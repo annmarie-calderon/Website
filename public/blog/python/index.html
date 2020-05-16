@@ -72,7 +72,22 @@
               
 
 
+<pre class="r"><code>library(reticulate)
+Sys.setenv(RETICULATE_PYTHON=&quot;/usr/bin/python&quot;)
+use_python(&quot;/usr/bin/python&quot;)</code></pre>
+<p>Python can be used to filter out important information using regular expressions. I created a list of birthdays for 7 different people.</p>
+<pre class="python"><code>import re
+string_bdays=&quot; David: 09.06.62, Aida: 09.22.65, Brian: 03.22.87, Wendy: 06.03.89, Dorian: 10.18.2006, Sabastian: 07.19.09, Sergio: 12.02.97, Alisha: 06.11.98&quot;
+print(string_bdays)
 
+#Here I filtered out all of the birthdays</code></pre>
+<pre><code>##  David: 09.06.62, Aida: 09.22.65, Brian: 03.22.87, Wendy: 06.03.89, Dorian: 10.18.2006, Sabastian: 07.19.09, Sergio: 12.02.97, Alisha: 06.11.98</code></pre>
+<pre class="python"><code>re.findall(r&quot;\d{1,3}\.\d{1,3}\.\d{1,3}&quot;, string_bdays)
+
+#Here I filtered out all the names</code></pre>
+<pre><code>## [&#39;09.06.62&#39;, &#39;09.22.65&#39;, &#39;03.22.87&#39;, &#39;06.03.89&#39;, &#39;10.18.200&#39;, &#39;07.19.09&#39;, &#39;12.02.97&#39;, &#39;06.11.98&#39;]</code></pre>
+<pre class="python"><code>re.findall(r&quot;\D+\:&quot;, string_bdays)</code></pre>
+<pre><code>## [&#39; David:&#39;, &#39;, Aida:&#39;, &#39;, Brian:&#39;, &#39;, Wendy:&#39;, &#39;, Dorian:&#39;, &#39;, Sabastian:&#39;, &#39;, Sergio:&#39;, &#39;, Alisha:&#39;]</code></pre>
 
               <hr>
               <div class="related-posts">
